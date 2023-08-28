@@ -1,0 +1,74 @@
+.recentNews {
+    padding: 45px;
+}
+
+
+.slideItem {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2)), url('../images/recent-football.jpg');
+    height: 518px;
+    padding: 45px;
+    position: relative;
+    
+}
+
+.slideItem__name {
+    width: 115px;
+    color: #EBEEF3;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 220px;
+    padding: 10px 20px;
+    border-radius: 3px;
+    border: 1px solid #EBEEF3;
+}
+
+.slideItem__date {
+    color: #F9FAFC;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100.9%;
+    margin-bottom: 10px;
+}
+
+.slideItem__title {
+    color: #F9FAFC;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 435;
+    line-height: 43px; /* 119.444% */
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+.slideItem__text {
+    color: #FFF;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 28px;
+}
+
+.customArrow {
+    position: absolute;
+    bottom: 20px;
+    background-color: red;
+    color: #000;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.nextArrow {
+    float: right;
+}
+
+.prevArrow {
+    float: left;
+}
+
