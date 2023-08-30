@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom';
 import style from "./Header.module.css"
 import styleIndex from "../Css/index.module.css"
 import logo from "../images/logo.svg"
+import signUpImg from "../images/signUp.svg"
 
 export const Header = () => {
     return (
@@ -35,6 +37,9 @@ export const Header = () => {
                         </nav>
                         <div className={style.header__search}>
                             <input className={style.header__input} type="text" placeholder="Search"/>
+                            <div className={style.header__signUp}>
+                                <Link to="/login"><img className={style.signUp__img} src={signUpImg} alt="Sign" /></Link>
+                            </div>
                         </div>
                     </div>
                 </div>
