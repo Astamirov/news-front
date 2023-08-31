@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { authSignUp } from "../../features/applicationSlice";
-// import { AppDispatch, RootState } from "../../app/store";
+import { useDispatch, useSelector } from "react-redux";
+import { authSignUp } from "../../features/applicationSlice"
+import { AppDispatch, RootState } from "../../app/store";
 import style from "./SignUp.module.css";
 import { Link } from 'react-router-dom'
 
@@ -10,13 +10,13 @@ import { Link } from 'react-router-dom'
 export const SignUp = () => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
-  // const error = useSelector((state:RootState)=> state.application.error)as string | null
-  // const dispatch = useDispatch<AppDispatch>()
-  const handleSingUp = (e: FormEvent) => {
+  const error = useSelector((state:RootState)=> state.application.error)as string | null
+  const dispatch = useDispatch<AppDispatch>()
+  const handleSignUp = (e: FormEvent) => {
     e.preventDefault();
     setLogin("");
     setPassword("");
-    // dispatch(authSignUp({_id: "", login, password}))
+    dispatch(authSignUp({_id: "", login, password}))
   };
 
   const handleSetName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,28 +27,29 @@ export const SignUp = () => {
     setPassword(e.target.value);
   };
 
-  // if(error){
-  //   return <div>{error}</div>
-  // }
+  if(error){
+    return <div>{error}</div>
+  }
   return (
     <div className={style.container}>
 
     <div className={style.form__signUp}>
-      <h1>SignUp Form</h1>
-      <form onSubmit={handleSingUp}>
-        <h4>Username</h4>
+      <h1 className={style.form__h1}>SignUp Form</h1>
+      <form onSubmit={handleSignUp}>
+        <h4 className={style.form__h4}>Username</h4>
         <input
+          className={style.input}
           onChange={handleSetName}
           value={login}
           type="text"
           name=""
           id=""
         />
-        <h4>Password</h4>
-        <input onChange={handleSetPass} value={password} type="password" />
-        <button>SingUp</button>
+        <h4 className={style.form__h4}>Password</h4>
+        <input className={style.input} onChange={handleSetPass} value={password} type="password" />
+        <button type='submit'>SingUp</button>
       </form>
-      <p>Have an account? <Link to='/login'>Login</Link></p>
+      <p className={style.form__text}>Have an account? <Link to='/login'>Login</Link></p>
     </div>
     </div>
   );

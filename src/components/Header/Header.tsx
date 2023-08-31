@@ -19,7 +19,7 @@ export const Header = () => {
                                     <a href="#home" className={style.header__navLink}>Home</a>
                                 </li>
                                 <li className={style.header__li}>
-                                    <a href="#" className={style.header__navLink}>Category</a>
+                                    <a href="#category" className={style.header__navLink}>Category</a>
                                 </li>
                                 <li className={style.header__li}>
                                     <a href="#" className={style.header__navLink}>Trending News</a>
@@ -28,18 +28,14 @@ export const Header = () => {
                                     <a href="#recent" className={style.header__navLink}>Recent News</a>
                                 </li>
                                 <li className={style.header__li}>
-                                    <a href="#" className={style.header__navLink}>Clubs Ranking</a>
-                                </li>
-                                <li className={style.header__li}>
-                                    <a href="#" className={style.header__navLink}>Sports Article</a>
+                                    <a href="#articles" className={style.header__navLink}>Sports Article</a>
                                 </li>
                             </ul>
                         </nav>
                         <div className={style.header__search}>
                             <input className={style.header__input} type="text" placeholder="Search"/>
-                            <div className={style.header__signUp}>
-                                <Link to="/login"><img className={style.signUp__img} src={signUpImg} alt="Sign" /></Link>
-                            </div>
+                            <Link to="/login"><img className={style.signUp__img} src={signUpImg} alt="Sign" /></Link>
+                            
                         </div>
                     </div>
                 </div>

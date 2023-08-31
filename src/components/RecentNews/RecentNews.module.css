@@ -3,7 +3,7 @@
 }
 
 .slideItem {
-    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2));
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5));
     height: 518px;
     padding: 45px;
     position: relative;
@@ -27,7 +27,7 @@
     font-style: normal;
     font-weight: 500;
     line-height: normal;
-    margin-bottom: 210px;
+    margin-bottom: 230px;
     padding: 10px 20px;
     border-radius: 3px;
     border: 1px solid #EBEEF3;
@@ -61,6 +61,10 @@
     font-style: normal;
     font-weight: 500;
     line-height: 28px;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .customArrow {

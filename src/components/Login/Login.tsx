@@ -1,24 +1,31 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { authSignUp } from "../../features/applicationSlice";
-// import { AppDispatch, RootState } from "../../app/store";
+import { useDispatch, useSelector } from "react-redux";
+import { authSignIn } from "../../features/applicationSlice";
+import { AppDispatch, RootState } from "../../app/store";
 import style from "./Login.module.css";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 
 export const SignIn = () => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
-  // const error = useSelector((state:RootState)=> state.application.error)as string | null
-  // const dispatch = useDispatch<AppDispatch>()
-  const handleSingUp = (e: FormEvent) => {
+  const error = useSelector((state:RootState)=> state.application.error) as string | null
+  const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
+
+  const token = useSelector((state: RootState) => state.application.token)
+
+
+  const handleSingIn =  (e: FormEvent) => {
     e.preventDefault();
-    setLogin("");
-    setPassword("");
-    // dispatch(authSignUp({_id: "", login, password}))
+    dispatch(authSignIn({_id: "", login, password}))
   };
 
+  if (token) {
+    navigate('/')
+  }
+  
   const handleSetName = (e: ChangeEvent<HTMLInputElement>) => {
     setLogin(e.target.value);
   };
@@ -27,28 +34,28 @@ export const SignIn = () => {
     setPassword(e.target.value);
   };
 
-  // if(error){
-  //   return <div>{error}</div>
-  // }
+ 
   return (
     <div className={style.container}>
 
     <div className={style.form__signIn}>
-      <h1>Login Form</h1>
-      <form onSubmit={handleSingUp}>
-        <h4>Username</h4>
+      <h1 className={style.form__h1}>Login Form</h1>
+      <form onSubmit={handleSingIn}>
+        <h4 className={style.form__h4}>Username</h4>
         <input
+          className={style.input}
           onChange={handleSetName}
           value={login}
           type="text"
           name=""
           id=""
         />
-        <h4>Password</h4>
-        <input onChange={handleSetPass} value={password} type="password" />
+        <h4 className={style.form__h4}>Password</h4>
+        <input className={style.input} onChange={handleSetPass} value={password} type="password" />
+        {error ? <div className={style.error}>{error}</div> : null}
         <button>Login</button>
       </form>
-      <p>Don`t have an account? <Link to='/auth'>Signup</Link></p>
+      <p className={style.form__text}>Don`t have an account? <Link to='/auth'>Signup</Link></p>
     </div>
     </div>
   );

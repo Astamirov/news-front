@@ -13,6 +13,7 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     justify-content: space-between;
     gap: 30px;
+    
 }
 
 .category__card {
@@ -41,14 +42,11 @@
     line-height: 39px; 
     text-transform: uppercase;
     position: relative;
-
     -webkit-mask-image: linear-gradient(to top, transparent, black);
     mask-image: linear-gradient(to top, transparent, black);
 }
 
 .category__card p::after {
-    
-
 
 }
 

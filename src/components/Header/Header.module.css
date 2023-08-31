@@ -37,6 +37,8 @@
     border-radius: 6px;
     border-style: none;
     padding: 0 15px;
+    position: relative;
+    list-style: none;
 }
 
 .header__input::placeholder {
@@ -44,23 +46,27 @@
 }
 
 .header__search {
-    position: relative;
     display: flex;
+    align-items: center;
 }
 
 .header__search::after {
     content: '';
     background: url('../images/search.png') no-repeat;
     position: absolute;
-    top: -5px;
-    right: -70px;
+    top: 4px;
+    right: 40px;
     color: #000;
-    width: 100%;
-    height: 100%;
+    width: 25px;
+    height: 30px;
     cursor: pointer;
+}
+
+.header__signUp {
+    
 }
 
 .signUp__img {
     margin-left: 15px;
-    width: 24px;
+    width: 21px;
 }

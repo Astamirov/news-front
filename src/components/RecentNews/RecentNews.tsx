@@ -5,9 +5,9 @@ import style from './RecentNews.module.css';
 import styleIndex from '../Css/index.module.css'
 import slideItem1 from '../images/recent-football.jpg'
 import slideItem2 from '../images/bayern1.jpg'
-import slideItem3 from '../images/bayern1.jpg'
+import slideItem3 from '../images/felix.jpg'
 
-const RecentNews = () => {
+export const RecentNews = () => {
   const settings = {
     dots: true,
     infinite: true,
@@ -53,5 +53,3 @@ return (
 
     );
 };
-
-export default RecentNews;
