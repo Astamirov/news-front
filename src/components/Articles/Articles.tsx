@@ -1,36 +1,19 @@
 import style from './Articles.module.css'
 import styleIndex from '../Css/index.module.css'
-import { useState, useEffect } from 'react';
-
-// import art1 from '../images/article_1.jpg'
-// import art2 from '../images/article_2.jpg'
-// import art3 from '../images/article_3.jpg'
+import { useEffect } from 'react';
+// import { Article } from '../../features/types';
+import { Link } from 'react-router-dom';
+import { fetchArticles } from '../../features/applicationSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import {  AppDispatch, RootState } from '../../app/store';
 
 export const Articles = () => {
-    const [articles, setArticles] = useState([
-        {
-            imageUrl: '',
-            category: '',
-            date: '',
-            title: '',
-            text: '',
-          },
-    ]);
+  const dispatch = useDispatch<AppDispatch>();
+  const articles = useSelector((state: RootState) => state.application.articles);
 
-    useEffect(() => {
-      // Отправляем запрос к серверу для получения списка новостей
-      fetch('http://localhost:4000/articles')
-        .then(res => res.json())
-        .then(data => {
-            console.log(data)
-          setArticles(data)
-          console.log(data)
-          ; // Устанавливаем полученные данные в состояние
-        })
-        .catch(error => {
-          console.error('Error fetching articles:', error);
-        });
-    }, []);
+  useEffect(() => {
+    dispatch(fetchArticles());
+  }, [dispatch]);
 
     if (articles === null) {
         return <div>Loading...</div>;
@@ -50,7 +33,9 @@ export const Articles = () => {
                     <span className={style.article__date}>{article.date}</span>
                     <h3 className={style.article__title}>{article.title}</h3>
                     <p className={style.article__text}>{article.text}</p>
-                    <button className={style.articleBtn}>читать продолжение</button>
+                    <Link to={`/article/${article._id}`} className={style.articleBtn}>
+                  Читать продолжение
+                </Link>
                   </div>
                 </div>
               ))}

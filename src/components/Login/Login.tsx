@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { authSignIn } from "../../features/applicationSlice";
+import { authSignIn } from "../../features/types";
 import { AppDispatch, RootState } from "../../app/store";
 import style from "./Login.module.css";
 import { Link, useNavigate } from 'react-router-dom';

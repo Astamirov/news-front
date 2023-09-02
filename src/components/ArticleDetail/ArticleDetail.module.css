@@ -1,0 +1,127 @@
+.articleDetail {
+    width: 1000px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.article__image {
+    position: relative;
+}
+
+.articleImg {
+    width: auto;
+    z-index: -1;
+    position: relative;
+}
+
+.article__name {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    color: #EBEEF3;
+    font-family: DM Sans;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    border-radius: 4px;
+    border: 1px solid #EBEEF3;
+    padding: 6px 10px;
+    background-color: #00000082;
+}
+
+.article__date {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 100.9%;
+}
+
+.article__title {
+    margin: 18px 0 15px;
+    color: #262626;
+    font-family: Sequel Sans;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 415;
+    line-height: 29px;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.article__text {
+    margin-bottom: 8px;
+    color: #696868;
+    font-family: DM Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 123.9%;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.articleBtn {
+    font-size: 14px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    color: #808080;
+}
+
+.articleBtn:hover {
+    color: #464646;
+}
+
+.commentSection {
+    padding: 30px 5px;
+}
+
+.com__title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.inputCom {
+    width: 50%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.addComBtn {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.addComBtn:hover {
+    background-color: #0056b3;
+}
+
+.comment {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.076);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.comment p {
+    margin: 0;
+}

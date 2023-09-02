@@ -1,119 +1,125 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../app/store';
 
-type User = {
+export type Comment = {
+  _id: string;
+  text: string;
+  author: {
     _id: string;
     login: string;
-    password: string
-}
+  };
+};
 
-type StateTodos = {
-    user: User[];
-    signingUp: boolean;
-    signingIn: boolean;
+export type Article = {
+  _id: string;
+  imageUrl: string;
+  category: string;
+  date: string;
+  title: string;
+  text: string;
+  comments: Comment[];
+};
+
+type StateApp = {
     token: string | null;
     error: string | null | unknown;
-}
+    articles: Article[]; // Добавляем поле articles
+};
 
-const initialState: StateTodos = {
-    user: [],
-    error: null,
-    signingUp: false,
-    signingIn: false,
-    token: localStorage.getItem('token'),
-}
+const initialState: StateApp = {
+  error: null,
+  token: localStorage.getItem('token'),
+  articles: [], // Инициализируем поле articles пустым массивом
+};
 
-export const authSignUp = createAsyncThunk<
-    User,
-    User,
-    {rejectValue: unknown; state: RootState}
+export const fetchArticles = createAsyncThunk<Article[], void, {rejectValue: unknown; state: RootState}>(
+  'article/fetchArticle',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`http://localhost:4000/articles`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const fetchArticleById = createAsyncThunk<Article, string, { rejectValue: unknown; state: RootState }>(
+    'article/fetchArticleById',
+    async (articleId, { rejectWithValue }) => {
+      try {
+        const response = await fetch(`http://localhost:4000/articles/${articleId}`);
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        return rejectWithValue(error);
+      }
+    }
+  );
+
+export const postComment = createAsyncThunk<
+  Comment,
+  { articleId: string | undefined; commentText: string },
+  { rejectValue: unknown; state: RootState }
 >(
-    'auth/signup',
-    async ({login, password}, thunkAPI) => {
-        try {
-            const res = await fetch('http://localhost:4000/users', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({login, password}),
-            })
+  'article/postComment',
+  async ({ articleId, commentText }, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().application.token; 
 
-            const json = await res.json()
+      const response = await fetch(`http://localhost:4000/articles/${articleId}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ text: commentText }),
+      });
 
-            if(json.error) {
-                return thunkAPI.rejectWithValue(json.error)
-            }
+      const data = await response.json();
 
-            return json
-        } catch(e) {
-            thunkAPI.rejectWithValue(e)
-        }
+      if (data.success) {
+        return data.comment;
+      } else {
+        return thunkAPI.rejectWithValue(data.error);
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
     }
-)
+  }
+);
 
-export const authSignIn = createAsyncThunk<
-    string,
-    User,
-    { rejectValue: unknown; state: RootState }
-    >(
-    'auth/signin', 
-    async ({login, password}, thunkAPI) => {
-        try {
-            const res = await fetch('http://localhost:4000/login', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({login, password}),
-            })
-            const token = await res.json()
-
-            if(token.error) {
-                return thunkAPI.rejectWithValue(token.error)
-            }   
-
-            localStorage.setItem('token', token.token)
-            return token.token
-        } catch(e) {
-            thunkAPI.rejectWithValue(e)
-        }
-        
-    }
-)
+// Остальные thunk-функции (authSignUp, authSignIn) оставляем без изменений
 
 const applicationSlice = createSlice({
-    name: 'application',
-    initialState,
-    reducers: {},
-    extraReducers: (builder) => {
-        builder
-        .addCase(authSignUp.pending, (state) => {
-            state.signingUp = true
-            state.error = null
-        })
-        .addCase(authSignUp.rejected, (state, action) => {
-            state.signingUp = false
-            state.error = action.payload
-        })
-        .addCase(authSignUp.fulfilled, (state) => {
-            state.signingUp = false
-            state.error = null
-        })
-        .addCase(authSignIn.pending, (state) => {
-            state.signingIn = true
-            state.error = null
-        })
-        .addCase(authSignIn.rejected, (state, action) => {
-            state.signingIn = false
-            state.error = action.payload
-        })
-        .addCase(authSignIn.fulfilled, (state, action) => {
-            state.signingIn = false
-            state.error = null
-            state.token = action.payload
-        })
-    },
-})
+  name: 'application',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchArticles.fulfilled, (state, action) => {
+        state.articles = action.payload;
+      })
+      .addCase(fetchArticles.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      .addCase(fetchArticleById.fulfilled, (state, action) => {
+        const articleIndex = state.articles.findIndex(article => article._id === action.payload._id);
+        state.articles[articleIndex] = action.payload;
+      })
+      .addCase(fetchArticleById.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      .addCase(postComment.fulfilled, (state, action) => {
+        const articleIndex = state.articles.findIndex(article => article._id === action.payload._id);
+        state.articles[articleIndex].comments.push(action.payload);
+      })
+      .addCase(postComment.rejected, (state, action) => {
+        state.error = action.payload;
+      })
 
-export default applicationSlice.reducer
+  },
+});
+
+export default applicationSlice.reducer;
