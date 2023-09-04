@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { authSignUp } from "../../features/types"
+import { authSignUp } from "../../features/authSlice"
 import { AppDispatch, RootState } from "../../app/store";
 import style from "./SignUp.module.css";
 import { Link } from 'react-router-dom'

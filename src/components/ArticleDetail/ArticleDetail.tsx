@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import style from './ArticleDetail.module.css';
+import stringHash from "string-hash";
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../../app/store';
 import { Link } from 'react-router-dom';
 import { fetchArticleById } from '../../features/applicationSlice'
-import { postComment } from '../../features/applicationSlice';
+import { postComment, removeComment } from '../../features/applicationSlice';
 
 const ArticleDetail = () => {
   const { articleId } = useParams() as { articleId: string };
@@ -13,15 +14,23 @@ const ArticleDetail = () => {
   const token = useSelector((state: RootState) => state.application.token);
   const article = useSelector((state: RootState) => state.application.articles.find(a => a._id === articleId))
   const dispatch = useDispatch<AppDispatch>(); 
+  const userLogin = useSelector((state: RootState) => state.auth.user.login);
 
+  const handleRemove = (commentId: string) => {
+      dispatch(removeComment({ articleId, commentId }));
+    
+  }
+
+  console.log()
 
 
   const handleCommentSubmit = async () => {
     try {
-      const resultAction = await dispatch(postComment({ articleId, commentText }));
+      const resultAction = await dispatch(
+        postComment({ articleId, commentText, author: { login: userLogin  } })
+      );
       if (postComment.fulfilled.match(resultAction)) {
         setCommentText('');
-        // После успешного добавления комментария, обновите статью, чтобы получить новую версию с комментарием
         dispatch(fetchArticleById(articleId));
       }
     } catch (error) {
@@ -29,11 +38,11 @@ const ArticleDetail = () => {
     }
   };
 
+
   useEffect(() => {
-    console.log('articleId:', articleId);
-    console.log('ArticleDetail рендерится снова');
     dispatch(fetchArticleById(articleId));
   }, [articleId, dispatch]);
+
 
 
   
@@ -41,7 +50,6 @@ if (!article) {
   return <div>Loading...</div>;
 }
   
- console.log('first')
   return (
     <div className={style.articleDetail}>
         <div className={style.article__image}>
@@ -72,13 +80,21 @@ if (!article) {
             )}
             
             {article.comments.map((comment, index) => (
-                 
+              
                 <div key={index} className={style.comment}>
                     <div className={style.comment__user}>
-                    
-                        <h4 className={style.user__name}>{comment.author ? comment.author.login : null}</h4>
+                    <div
+                      className={style.user__avatar}
+                      style={{ backgroundColor: `#${(stringHash(comment.username || '') % 0xfffffA).toString(15)}` }}>
+                      {comment.username ? comment.username[0].toUpperCase() : "A"}
                     </div>
-                    <p>{comment.text}</p>
+                        <h4 className={style.user__name}>{comment.username || 'Автор неизвестен'}</h4>
+                    </div>
+                    <div className={style.comment__inner}>
+                      <p>{comment.text}</p>
+                      <button className={style.removeBtnComment} onClick={() => handleRemove(comment._id)}>❌</button>
+                    </div>
+                    
                 </div>
             ))}
         </div>

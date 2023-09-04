@@ -8,7 +8,7 @@ type User = {
 }
 
 type StateTodos = {
-    user: User[];
+    user: User;
     signingUp: boolean;
     signingIn: boolean;
     token: string | null;
@@ -16,12 +16,18 @@ type StateTodos = {
 }
 
 const initialState: StateTodos = {
-    user: [],
+    user: {
+        _id: '', 
+        login: '',
+        password: ''
+    },
     error: null,
     signingUp: false,
     signingIn: false,
     token: localStorage.getItem('token'),
 }
+
+
 
 export const authSignUp = createAsyncThunk<
     User,
@@ -77,13 +83,13 @@ export const authSignIn = createAsyncThunk<
             localStorage.setItem('token', token.token)
             return token.token
         } catch(e) {
-            thunkAPI.rejectWithValue(e)
+            return thunkAPI.rejectWithValue(e)
         }
         
     }
 )
 
-const applicationSlice = createSlice({
+const authSlice = createSlice({
     name: 'application',
     initialState,
     reducers: {},
@@ -113,8 +119,11 @@ const applicationSlice = createSlice({
             state.signingIn = false
             state.error = null
             state.token = action.payload
+            state.user.login = action.meta.arg.login;
+
+            
         })
     },
 })
 
-export default applicationSlice.reducer
+export default authSlice.reducer

@@ -15,6 +15,8 @@ const initialState: StateUsers = {
     users: [],
 }
 
+
+
 export const fetchUsers = createAsyncThunk<User[], void, {rejectValue: unknown; state: RootState}>(
     'users/fetch',
     async (_, thunkAPI) => {

@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { authSignIn } from "../../features/types";
+import { authSignIn } from "../../features/authSlice";
 import { AppDispatch, RootState } from "../../app/store";
 import style from "./Login.module.css";
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,11 +10,11 @@ import { Link, useNavigate } from 'react-router-dom';
 export const SignIn = () => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
-  const error = useSelector((state:RootState)=> state.application.error) as string | null
+  const error = useSelector((state:RootState)=> state.auth.error) as string | null
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
 
-  const token = useSelector((state: RootState) => state.application.token)
+  const token = useSelector((state: RootState) => state.auth.token)
 
 
   const handleSingIn =  (e: FormEvent) => {
@@ -23,7 +23,7 @@ export const SignIn = () => {
   };
 
   if (token) {
-    navigate('/')
+    navigate("/")
   }
   
   const handleSetName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +34,7 @@ export const SignIn = () => {
     setPassword(e.target.value);
   };
 
- 
+console.log(error)
   return (
     <div className={style.container}>
 
