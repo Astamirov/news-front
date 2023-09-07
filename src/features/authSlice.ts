@@ -120,8 +120,8 @@ const authSlice = createSlice({
             state.error = null
             state.token = action.payload
             state.user.login = action.meta.arg.login;
+            state.user._id = action.meta.arg._id
 
-            
         })
     },
 })

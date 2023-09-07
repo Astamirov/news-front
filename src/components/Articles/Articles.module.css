@@ -3,7 +3,7 @@
     grid-template-columns: 1fr 1fr 1fr;
     justify-content: space-between;
     gap: 30px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 .article {

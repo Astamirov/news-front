@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
-import applicationReducer from './applicationSlice'; // Импортируйте ваш applicationSlice
-import authReducer from './authSlice'; 
-import usersReducer from './usersSlice'; 
+import applicationReducer from './applicationSlice';
+import authReducer from './authSlice';
+import usersReducer from './usersSlice';
 
 
 const rootReducer = combineReducers({

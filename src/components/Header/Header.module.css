@@ -15,7 +15,6 @@
 .header__ul {
     width: 715px;
     display: flex;
-    /* font-family: Comic Sans MS, cursive; */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     justify-content: space-between;
     font-weight: 600;
@@ -60,10 +59,6 @@
     width: 25px;
     height: 30px;
     cursor: pointer;
-}
-
-.header__signUp {
-    
 }
 
 .signUp__img {

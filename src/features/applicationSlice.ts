@@ -1,5 +1,5 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../app/store';
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../app/store";
 
 export type Comment = {
   _id: string;
@@ -24,26 +24,52 @@ export type Article = {
 };
 
 type StateApp = {
-    token: string | null;
-    error: string | null | unknown;
-    articles: Article[];
-    username: string | null;
-    userId: string | null;
+  token: string | null;
+  error: string | null | unknown;
+  articles: Article[];
+  username: string | null;
+  userId: string | null;
 };
 
 const initialState: StateApp = {
   error: null,
-  token: localStorage.getItem('token'),
-  articles: JSON.parse(localStorage.getItem('articles') || '[]'),
-  username: null, // Инициализируем поле articles пустым массивом
+  token: localStorage.getItem("token"),
+  articles: JSON.parse(localStorage.getItem("articles") || "[]"),
+  username: null,
   userId: null,
 };
 
-export const fetchArticles = createAsyncThunk<Article[], void, {rejectValue: unknown; state: RootState}>(
-  'article/fetchArticle',
-  async (_, { rejectWithValue }) => {
+export const fetchArticles = createAsyncThunk<
+  Article[],
+  void,
+  { rejectValue: unknown; state: RootState }
+>("article/fetchArticle", async (_, { rejectWithValue }) => {
+  try {
+    const response = await fetch(`http://localhost:4000/articles`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return rejectWithValue(error);
+  }
+});
+
+export const fetchArticleById = createAsyncThunk<
+  Article,
+  string,
+  { rejectValue: unknown; state: RootState }
+>(
+  "article/fetchArticleById",
+  async (articleId, { rejectWithValue, getState }) => {
     try {
-      const response = await fetch(`http://localhost:4000/articles`);
+      const token = getState().application.token;
+      const response = await fetch(
+        `http://localhost:4000/articles/${articleId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = await response.json();
       return data;
     } catch (error) {
@@ -52,44 +78,31 @@ export const fetchArticles = createAsyncThunk<Article[], void, {rejectValue: unk
   }
 );
 
-export const fetchArticleById = createAsyncThunk<Article, string, { rejectValue: unknown; state: RootState }>(
-    'article/fetchArticleById',
-    async (articleId, { rejectWithValue, getState }) => {
-      try {
-        const token = getState().application.token;
-        const response = await fetch(`http://localhost:4000/articles/${articleId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`, 
-              },
-        });
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        return rejectWithValue(error);
-      }
-    }
-  );
-  
-  
-
 export const postComment = createAsyncThunk<
   Comment,
-  { articleId: string | undefined; commentText: string; author: { login: string } },
+  {
+    articleId: string | undefined;
+    commentText: string;
+    author: { login: string };
+  },
   { rejectValue: unknown; state: RootState }
 >(
-  'article/postComment',
-  async ({ articleId, commentText, author}, thunkAPI) => {
+  "article/postComment",
+  async ({ articleId, commentText, author }, thunkAPI) => {
     const token = thunkAPI.getState().application.token;
 
     try {
-      const response = await fetch(`http://localhost:4000/articles/${articleId}/comments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ text: commentText, author }),
-      });
+      const response = await fetch(
+        `http://localhost:4000/articles/${articleId}/comments`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ text: commentText, author }),
+        }
+      );
 
       const data = await response.json();
 
@@ -97,7 +110,6 @@ export const postComment = createAsyncThunk<
         return data.comment;
       } else {
         return thunkAPI.rejectWithValue(data.error);
-        
       }
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -106,79 +118,104 @@ export const postComment = createAsyncThunk<
 );
 
 export const removeComment = createAsyncThunk<
-    string, 
-    { articleId: string, commentId: string }, 
-    {rejectValue: string;  state: RootState}
-    >('comment/removeComment', async ({ articleId, commentId }, thunkAPI) => {
-        const token = thunkAPI.getState().application.token;
-        try{
-            const res = await fetch(`http://localhost:4000/articles/${articleId}/comments/${commentId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                  },
-            });
-            if(res.ok) {
-                return commentId;
-            }
-            const comment = await res.json()
-            return thunkAPI.rejectWithValue(comment)
-        } catch (error) {
-            return thunkAPI.rejectWithValue((error as Error).message)
-        }
+  string,
+  { articleId: string; commentId: string },
+  { rejectValue: string; state: RootState }
+>("comment/removeComment", async ({ articleId, commentId }, thunkAPI) => {
+  const token = thunkAPI.getState().application.token;
+  try {
+    const res = await fetch(
+      `http://localhost:4000/articles/${articleId}/deleteComment/${commentId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log(res);
+    if (res.ok) {
+      return commentId;
+    }
+    const comment = await res.json();
+    return thunkAPI.rejectWithValue(comment);
+  } catch (error) {
+    return thunkAPI.rejectWithValue((error as Error).message);
+  }
 });
 
-
 const applicationSlice = createSlice({
-  name: 'application',
+  name: "application",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchArticles.fulfilled, (state, action) => {
         state.articles = action.payload;
-        localStorage.setItem('articles', JSON.stringify(action.payload));
+        localStorage.setItem("articles", JSON.stringify(action.payload));
       })
       .addCase(fetchArticles.rejected, (state, action) => {
         state.error = action.error.message;
       })
       .addCase(fetchArticleById.fulfilled, (state, action) => {
-        const articleIndex = state.articles.findIndex(article => article._id === action.payload._id);
+        const articleIndex = state.articles.findIndex(
+          (article) => article._id === action.payload._id
+        );
 
         if (articleIndex !== -1) {
-            state.articles[articleIndex] = action.payload;
+          state.articles[articleIndex] = action.payload;
         }
       })
       .addCase(fetchArticleById.rejected, (state, action) => {
         state.error = action.error.message;
       })
       .addCase(postComment.fulfilled, (state, action) => {
-        state.username = action.payload.author.login
-        const articleIndex = state.articles.findIndex(article => article._id === action.payload._id);
+        state.username = action.meta.arg.author.login;
+        const articleIndex = state.articles.findIndex(
+          (article) => article._id === action.meta.arg.articleId
+        );
         if (articleIndex !== -1) {
-            state.articles[articleIndex].comments.push(action.payload);
-          }
+          state.articles[articleIndex].comments.push(action.payload);
+        }
       })
       .addCase(postComment.rejected, (state, action) => {
         state.error = action.payload;
       })
       .addCase(removeComment.fulfilled, (state, action) => {
+        const { articleId, commentId } = action.meta.arg;
+        const articleIndex = state.articles.findIndex(
+          (article) => article._id === articleId
+        );
+
+        if (articleIndex !== -1) {
+          state.articles[articleIndex].comments = state.articles[
+            articleIndex
+          ].comments.filter((item) => item._id !== commentId);
+        }
+
         state.error = null;
-        state.userId = action.meta.arg.commentId
-        
-    })
-    .addCase(removeComment.rejected, (state, action: PayloadAction<string | unknown>) => {
-        state.error = action.payload;
-    })
-    .addCase(removeComment.pending, (state, action: PayloadAction<void, string, {arg: string | unknown}>) => {
-        state.articles = state.articles.map((article) => {
-            if(article._id === action.meta.arg) {
-                article.loading = true;
+      })
+      .addCase(
+        removeComment.rejected,
+        (state, action: PayloadAction<string | unknown>) => {
+          state.error = action.payload;
+        }
+      )
+      .addCase(
+        removeComment.pending,
+        (
+          state,
+          action: PayloadAction<void, string, { arg: string | unknown }>
+        ) => {
+          state.articles = state.articles.map((article) => {
+            if (article._id === action.meta.arg) {
+              article.loading = true;
             }
             return article;
-        })
-    })
+          });
+        }
+      );
   },
 });
 

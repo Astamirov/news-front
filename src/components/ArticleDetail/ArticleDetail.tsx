@@ -9,41 +9,31 @@ import { fetchArticleById } from '../../features/applicationSlice'
 import { postComment, removeComment } from '../../features/applicationSlice';
 
 const ArticleDetail = () => {
-  const { articleId } = useParams() as { articleId: string };
+  const { articleId,  } = useParams() as { articleId: string };
   const [commentText, setCommentText] = useState('');
   const token = useSelector((state: RootState) => state.application.token);
   const article = useSelector((state: RootState) => state.application.articles.find(a => a._id === articleId))
   const dispatch = useDispatch<AppDispatch>(); 
   const userLogin = useSelector((state: RootState) => state.auth.user.login);
 
+  console.log(userLogin)
+  
+
   const handleRemove = (commentId: string) => {
       dispatch(removeComment({ articleId, commentId }));
-    
   }
 
-  console.log()
-
-
   const handleCommentSubmit = async () => {
-    try {
-      const resultAction = await dispatch(
-        postComment({ articleId, commentText, author: { login: userLogin  } })
-      );
-      if (postComment.fulfilled.match(resultAction)) {
-        setCommentText('');
+        await dispatch(postComment({ articleId, commentText, author: { login: userLogin  } }));
         dispatch(fetchArticleById(articleId));
-      }
-    } catch (error) {
-      console.error('Error adding comment:', error);
-    }
-  };
+        setCommentText('');
+  }
 
 
   useEffect(() => {
     dispatch(fetchArticleById(articleId));
+    
   }, [articleId, dispatch]);
-
-
 
   
 if (!article) {
@@ -64,9 +54,9 @@ if (!article) {
         <div className={style.commentSection}>
             
             <h3 className={style.com__title}>Комментарии</h3>
-            {!token ? (
+            {!token ? 
                 <p>Оставлять комментарии могут только авторизованные пользователи, <Link to='/login'>aвторизоваться?</Link></p>
-            ) : (
+              : 
                 <>
                     <input 
                         className={style.inputCom}
@@ -77,7 +67,7 @@ if (!article) {
                     />
                     <button className={style.addComBtn} onClick={handleCommentSubmit}>Добавить комментарий</button>
                 </>
-            )}
+            }
             
             {article.comments.map((comment, index) => (
               
@@ -86,15 +76,15 @@ if (!article) {
                     <div
                       className={style.user__avatar}
                       style={{ backgroundColor: `#${(stringHash(comment.username || '') % 0xfffffA).toString(15)}` }}>
-                      {comment.username ? comment.username[0].toUpperCase() : "A"}
+                      {comment.username ? comment.username[0].toUpperCase() : ""}
                     </div>
                         <h4 className={style.user__name}>{comment.username || 'Автор неизвестен'}</h4>
                     </div>
                     <div className={style.comment__inner}>
                       <p>{comment.text}</p>
-                      <button className={style.removeBtnComment} onClick={() => handleRemove(comment._id)}>❌</button>
+                      {(userLogin === comment.username) ?
+                      (<button className={style.removeBtnComment} onClick={() => handleRemove(comment._id)}>❌</button>) : ''}
                     </div>
-                    
                 </div>
             ))}
         </div>

@@ -10,6 +10,7 @@ import { Articles } from './components/Articles/Articles';
 import { useSelector } from 'react-redux'
 import { RootState } from './app/store'
 import ArticleDetail from './components/ArticleDetail/ArticleDetail'
+import Footer from './components/Footer/Footer'
 
 
 
@@ -29,6 +30,7 @@ export const App = () => {
               <Category />
               <Articles />
               <RecentNews />
+              <Footer />
             </>
           } 
         />
