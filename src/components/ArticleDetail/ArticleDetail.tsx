@@ -16,8 +16,6 @@ const ArticleDetail = () => {
   const dispatch = useDispatch<AppDispatch>(); 
   const userLogin = useSelector((state: RootState) => state.auth.user.login);
 
-  console.log(userLogin)
-  
 
   const handleRemove = (commentId: string) => {
       dispatch(removeComment({ articleId, commentId }));
@@ -28,7 +26,6 @@ const ArticleDetail = () => {
         dispatch(fetchArticleById(articleId));
         setCommentText('');
   }
-
 
   useEffect(() => {
     dispatch(fetchArticleById(articleId));
@@ -82,7 +79,7 @@ if (!article) {
                     </div>
                     <div className={style.comment__inner}>
                       <p>{comment.text}</p>
-                      {(userLogin === comment.username) ?
+                      {(userLogin !== comment.username) ?
                       (<button className={style.removeBtnComment} onClick={() => handleRemove(comment._id)}>❌</button>) : ''}
                     </div>
                 </div>

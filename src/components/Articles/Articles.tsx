@@ -20,7 +20,7 @@ export const Articles = () => {
       }
 
     return (
-        <div className={style.articles} id='articles'>
+        <div className={style.articles} id='trendNews'>
           <div className={styleIndex.container}>
             <div className={style.articles__inner}>
               {articles.map((article, index) => (
